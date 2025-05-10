@@ -47,11 +47,11 @@ await channel.QueueDeclareAsync(queue: "q.hello", durable: false, exclusive: fal
     arguments: null);
 ```
 
-- queue: "q.hello" -> The name of the queue
-- durable: false -> Should this queue survive a broker restart
-- exclusive: false -> Should this queue use be limited to its declaring connection? Such a queue will be deleted when its declaring connection closes
-- autoDelete: false -> Should this queue be auto-deleted when its last consumer (if any) unsubscribes
-- arguments: null -> Optional; additional queue arguments, e.g. "x-queue-type"
+- queue -> The name of the queue
+- durable-> Should this queue survive a broker restart
+- exclusive -> Should this queue use be limited to its declaring connection? Such a queue will be deleted when its declaring connection closes
+- autoDelete -> Should this queue be auto-deleted when its last consumer (if any) unsubscribes
+- arguments -> Optional; additional queue arguments, e.g. "x-queue-type"
 
 
 ![createqueue](imgs/createqueue.png)
@@ -65,9 +65,11 @@ var body = Encoding.UTF8.GetBytes(message);
 
 ## Publish message.
 
-When the code above finishes running, the channel and the connection will be disposed. That's it for our publisher.
-
 **Default Exchange** is a direct exchange with no name (empty string) pre-declared by the broker. It has one special property that makes it very useful for simple applications: every queue that is created is automatically bound to it with a routing key which is the same as the queue name.
+
+![amqpdefault](imgs/amqpdefault.png)
+
+When the code finishes running, the channel and the connection will be disposed.
 
 ```cs
 await channel.BasicPublishAsync(exchange: string.Empty, routingKey: "q.hello", body: body);
