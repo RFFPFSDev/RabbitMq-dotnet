@@ -1,6 +1,6 @@
 # Overview
 
-![overviewqueue](overviewqueue.png)
+![overviewqueue](imgs/overviewqueue.png)
 
 # Some types of exchanges
 
@@ -8,7 +8,7 @@
 - Fanout: A fanout exchange routes messages to all of the queues bound to it.
 - Topic: The topic exchange does a wildcard match between the routing key and the routing pattern specified in the binding.
 
-![overviewtypesofexchanges](overviewtypesofexchanges.png)
+![overviewtypesofexchanges](imgs/overviewtypesofexchanges.png)
 
 # Run RabbitMQ
 
