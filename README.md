@@ -2,13 +2,20 @@
 
 ![overviewqueue](imgs/overviewqueue.png)
 
-# Some types of exchanges
+# Types of exchanges
 
 - Direct: The message is routed to the queues whose binding key exactly matches the routing key of the message. For example, if the queue is bound to the exchange with the binding key pdfprocess, a message published to the exchange with a routing key pdfprocess is routed to that queue.
 - Fanout: A fanout exchange routes messages to all of the queues bound to it.
 - Topic: The topic exchange does a wildcard match between the routing key and the routing pattern specified in the binding.
+- Headers: Headers exchanges use the message header attributes for routing.
 
 ![overviewtypesofexchanges](imgs/overviewtypesofexchanges.png)
+
+## Message acknowledgements
+
+- It's up to the consumer to acknowledge a message. Once the message has been acknowledged, message is removed from the queue. 
+- The consuming application should not acknowledge a message until it is completely finished with it. 
+- Consumer can also Nack (negative acknowledge). So, message, by default, is sent back to the queue for another try
 
 # Run RabbitMQ
 
@@ -81,7 +88,45 @@ await channel.BasicPublishAsync(exchange: string.Empty, routingKey: "q.hello", b
 
 ![messagepublished](imgs/messagepublished.png)
 
+# Receive first "Hello word"
+
+Create connection anc channel
+
+Note that we declare the queue here as well. Because we might start the consumer before the publisher, we want to make sure the queue exists before we try to consume messages from it.
+
+```cs
+var factory = new ConnectionFactory { HostName = "localhost" };
+using var connection = await factory.CreateConnectionAsync();
+using var channel = await connection.CreateChannelAsync();
+
+await channel.QueueDeclareAsync(queue: "q.hello", durable: false, exclusive: false, autoDelete: false,
+    arguments: null);
+```
+
+Code to consume message
+
+
+```cs
+var consumer = new AsyncEventingBasicConsumer(channel);
+consumer.ReceivedAsync += (model, ea) =>
+{
+    var body = ea.Body.ToArray();
+    var message = Encoding.UTF8.GetString(body);
+    Console.WriteLine($" [x] Received {message}");
+    return Task.CompletedTask;
+};
+
+await channel.BasicConsumeAsync("hello", autoAck: true, consumer: consumer);
+```
+
+- queue -> same "q.hello"
+- autoAck -> to acknowledge the message
+- consumer -> code with channel and event callback
+
+
 ## References:
+
+https://www.rabbitmq.com/tutorials/tutorial-one-dotnet
 
 https://medium.com/@deshan.m/6-fantastic-mistakes-that-you-can-do-using-rabbitmq-nodejs-cbf5db99613c
 
