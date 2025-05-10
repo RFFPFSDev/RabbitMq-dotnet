@@ -1,3 +1,15 @@
+# Overview
+
+![overviewqueue](overviewqueue.png)
+
+# Some types of exchanges
+
+- Direct: The message is routed to the queues whose binding key exactly matches the routing key of the message. For example, if the queue is bound to the exchange with the binding key pdfprocess, a message published to the exchange with a routing key pdfprocess is routed to that queue.
+- Fanout: A fanout exchange routes messages to all of the queues bound to it.
+- Topic: The topic exchange does a wildcard match between the routing key and the routing pattern specified in the binding.
+
+![overviewtypesofexchanges](overviewtypesofexchanges.png)
+
 # Run RabbitMQ
 
 First, 'docker-compose up' to run the rabbitmq
@@ -80,4 +92,3 @@ https://www.cloudamqp.com/blog/part4-rabbitmq-13-common-errors.html
 https://www.cloudamqp.com/blog/part3-rabbitmq-best-practice-for-high-availability.html
 
 https://www.cloudamqp.com/blog/part2-rabbitmq-best-practice-for-high-performance.html
-
