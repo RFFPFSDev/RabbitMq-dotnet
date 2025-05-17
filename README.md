@@ -131,10 +131,30 @@ await channel.BasicConsumeAsync("hello", autoAck: true, consumer: consumer);
   
 ![multipleconsumers](imgs/multipleconsumers.png)
 
+# Message acknowledgment
+
+Doing a task can take a few seconds. You may wonder what happens if one of the consumers starts a long task and dies with it only partly done. With our current code, once RabbitMQ delivers a message to the consumer it immediately marks it for deletion. In this case, if you terminate a worker we will lose the message it was just processing. We'll also lose all the messages that were dispatched to this particular worker but were not yet handled.
+
+But we don't want to lose any tasks. If a worker dies, we'd like the task to be delivered to another worker.
+
+- In consumer, set autoAck: false
+
+```cs
+await channel.BasicConsumeAsync("q.hello", autoAck: false, consumer: consumer);
+```
+
+- multiple -> Ack all messages up to the delivery tag if set to true.
+
+```cs
+Console.WriteLine($" [x] Received {message}");
+await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
+```
 
 ## References:
 
 https://www.rabbitmq.com/tutorials/tutorial-one-dotnet
+
+https://www.rabbitmq.com/tutorials/tutorial-two-dotnet
 
 https://medium.com/@deshan.m/6-fantastic-mistakes-that-you-can-do-using-rabbitmq-nodejs-cbf5db99613c
 
