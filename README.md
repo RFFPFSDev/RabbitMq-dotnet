@@ -131,7 +131,7 @@ await channel.BasicConsumeAsync("hello", autoAck: true, consumer: consumer);
   
 ![multipleconsumers](imgs/multipleconsumers.png)
 
-# Message acknowledgment
+## Message acknowledgment
 
 Doing a task can take a few seconds. You may wonder what happens if one of the consumers starts a long task and dies with it only partly done. With our current code, once RabbitMQ delivers a message to the consumer it immediately marks it for deletion. In this case, if you terminate a worker we will lose the message it was just processing. We'll also lose all the messages that were dispatched to this particular worker but were not yet handled.
 
@@ -149,6 +149,34 @@ await channel.BasicConsumeAsync("q.hello", autoAck: false, consumer: consumer);
 Console.WriteLine($" [x] Received {message}");
 await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
 ```
+
+## Message durability
+
+We have learned how to make sure that even if the consumer dies, the task isn't lost. But our tasks will still be lost if RabbitMQ server stops. When RabbitMQ quits or crashes it will forget the queues and messages unless you tell it not to. Two things are required to make sure that messages aren't lost: we need to mark both the queue and messages as durable.
+
+
+This QueueDeclareAsync (durable: true) change needs to be applied to both the producer and consumer code
+
+Note: Declaring a queue is idempotent - it will not be created/modified if it already exists.
+
+```cs
+await channel.QueueDeclareAsync(queue: "q.hello", durable: true, exclusive: false, autoDelete: false, arguments: null);
+```
+
+```cs
+var properties = new BasicProperties
+{
+    Persistent = true
+};
+
+await channel.BasicPublishAsync(exchange: string.Empty, routingKey: "q.hello", true, basicProperties: properties, body: body);
+```
+
+Note on Message Persistence: Marking messages as persistent doesn't fully guarantee that a message won't be lost. Although it tells RabbitMQ to save the message to disk, there is still a short time window when RabbitMQ has accepted a message and hasn't saved it yet. Also, RabbitMQ doesn't do fsync(2) for every message -- it may be just saved to cache and not really written to the disk. The persistence guarantees aren't strong, but it's more than enough for our simple task queue. If you need a stronger guarantee then you can use publisher confirms.
+
+## TO DO: Publisher confirms
+
+https://www.rabbitmq.com/docs/confirms
 
 ## References:
 
