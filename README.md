@@ -123,6 +123,14 @@ await channel.BasicConsumeAsync("hello", autoAck: true, consumer: consumer);
 - autoAck -> to acknowledge the message
 - consumer -> code with channel and event callback
 
+# Multiple Workers/Consumers
+
+- Same producer but we are sending 1000 messages
+- Same consumer but we are delaying 1 second to reproduce a long task
+- Run multiple PowerShell to run multiple consumers: "dotnet run" command in each powershell
+  
+![multipleconsumers](multipleconsumers.png)
+
 
 ## References:
 
