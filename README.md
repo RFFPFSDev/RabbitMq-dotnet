@@ -129,7 +129,7 @@ await channel.BasicConsumeAsync("hello", autoAck: true, consumer: consumer);
 - Same consumer but we are delaying 1 second to reproduce a long task
 - Run multiple PowerShell to run multiple consumers: "dotnet run" command in each powershell
   
-![multipleconsumers](multipleconsumers.png)
+![multipleconsumers](imgs/multipleconsumers.png)
 
 
 ## References:
