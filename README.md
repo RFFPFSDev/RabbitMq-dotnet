@@ -149,7 +149,20 @@ Prefetch is applied separately to each new consumer on the channel
 await channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 10, global: false);
 ```
 
+- second worker starts at message 20 even though first worker is still processing message 12. this happens because each worker is prefetching in batch of 10.
+
 ![consumerprefetch](imgs/consumerprefetch.png)
+
+- first worker goes from message 19 to 30.
+- When both workers are active (after message 20), the messages are consumed in round-robin fashion.
+
+![consumerprefetch2](imgs/consumerprefetch2.png)
+
+## Round robin
+
+- Round robin scheduling algorithms distribute processes evenly among resources
+
+![alt text](image.png)
 
 ## Message acknowledgment
 
