@@ -133,7 +133,7 @@ await channel.BasicConsumeAsync("hello", autoAck: true, consumer: consumer);
 
 ## Consumer prefetch 
 
-Note that when we start a second consumer, it doesn't pick any un-acked messages.
+Note that when we start a second consumer (on the left side of image), it doesn't pick any un-acked messages.
 
 ![noprefetch](imgs/noprefetch.png)
 
