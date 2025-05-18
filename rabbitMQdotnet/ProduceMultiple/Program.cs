@@ -12,9 +12,9 @@ var properties = new BasicProperties
     Persistent = true
 };
 
-for (int i = 0; i < 1000; i++)
+for (int i = 0; i < 100; i++)
 {
-    var message = $"MESSAGE: {i}";
+    var message = $"MESSAGE: {i + 1}";
     var body = Encoding.UTF8.GetBytes(message);
     await channel.BasicPublishAsync(exchange: string.Empty, routingKey: "q.hello", true, basicProperties: properties, body: body);
     Console.WriteLine($" [x] Sent {message}");

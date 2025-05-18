@@ -125,7 +125,7 @@ await channel.BasicConsumeAsync("hello", autoAck: true, consumer: consumer);
 
 # Multiple Workers/Consumers
 
-- Same producer but we are sending 1000 messages
+- Same producer but we are sending 100 messages
 - Same consumer but we are delaying 1 second to reproduce a long task
 - Run multiple PowerShell to run multiple consumers: "dotnet run" command in each powershell
   
@@ -143,6 +143,7 @@ But we don't want to lose any tasks. If a worker dies, we'd like the task to be 
 await channel.BasicConsumeAsync("q.hello", autoAck: false, consumer: consumer);
 ```
 
+- add BasicAckAsync
 - multiple -> Ack all messages up to the delivery tag if set to true.
 
 ```cs
