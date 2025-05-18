@@ -182,7 +182,7 @@ await channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 10, global: false);
 
 - Round robin scheduling algorithms distribute processes evenly among resources
 
-![roundrobin](roundrobin.png)
+![roundrobin](imgs/roundrobin.png)
 
 ## Message durability
 
