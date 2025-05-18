@@ -154,7 +154,7 @@ await channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 10, global: false);
 ![consumerprefetch](imgs/consumerprefetch.png)
 
 - first worker (on the right side of image) goes from message 19 to 30.
-- After both workers are active and all last time prefetch messages were processed (after message 30), the messages are consumed in round-robin fashion.
+- After both workers are active and all last time prefetch messages were processed (after message 30), the messages start to be consumed in round-robin fashion.
 
 ![consumerprefetch2](imgs/consumerprefetch2.png)
 
