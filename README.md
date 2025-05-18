@@ -131,6 +131,26 @@ await channel.BasicConsumeAsync("hello", autoAck: true, consumer: consumer);
   
 ![multipleconsumers](imgs/multipleconsumers.png)
 
+## Message acknowledgment
+
+Doing a task can take a few seconds. You may wonder what happens if one of the consumers starts a long task and dies with it only partly done. With our current code, once RabbitMQ delivers a message to the consumer it immediately marks it for deletion. In this case, if you terminate a worker we will lose the message it was just processing. We'll also lose all the messages that were dispatched to this particular worker but were not yet handled.
+
+But we don't want to lose any tasks. If a worker dies, we'd like the task to be delivered to another worker.
+
+- In consumer, set autoAck: false (If autoAck is true, a message is considered done as soon as it's delivered)
+
+```cs
+await channel.BasicConsumeAsync("q.hello", autoAck: false, consumer: consumer);
+```
+
+- add BasicAckAsync
+- multiple -> Ack all messages up to the delivery tag if set to true.
+
+```cs
+Console.WriteLine($" [x] Received {message}");
+await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
+```
+
 ## Consumer prefetch 
 
 Note that when we start a second consumer (on the left side of image), it doesn't pick any un-acked messages.
@@ -164,30 +184,9 @@ await channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 10, global: false);
 
 ![alt text](image.png)
 
-## Message acknowledgment
-
-Doing a task can take a few seconds. You may wonder what happens if one of the consumers starts a long task and dies with it only partly done. With our current code, once RabbitMQ delivers a message to the consumer it immediately marks it for deletion. In this case, if you terminate a worker we will lose the message it was just processing. We'll also lose all the messages that were dispatched to this particular worker but were not yet handled.
-
-But we don't want to lose any tasks. If a worker dies, we'd like the task to be delivered to another worker.
-
-- In consumer, set autoAck: false (If autoAck is true, a message is considered done as soon as it's delivered)
-
-```cs
-await channel.BasicConsumeAsync("q.hello", autoAck: false, consumer: consumer);
-```
-
-- add BasicAckAsync
-- multiple -> Ack all messages up to the delivery tag if set to true.
-
-```cs
-Console.WriteLine($" [x] Received {message}");
-await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
-```
-
 ## Message durability
 
 We have learned how to make sure that even if the consumer dies, the task isn't lost. But our tasks will still be lost if RabbitMQ server stops. When RabbitMQ quits or crashes it will forget the queues and messages unless you tell it not to. Two things are required to make sure that messages aren't lost: we need to mark both the queue and messages as durable.
-
 
 This QueueDeclareAsync (durable: true) change needs to be applied to both the producer and consumer code
 
