@@ -131,13 +131,33 @@ await channel.BasicConsumeAsync("hello", autoAck: true, consumer: consumer);
   
 ![multipleconsumers](imgs/multipleconsumers.png)
 
+## Consumer prefetch 
+
+Note that when we start a second consumer, it doesn't pick any un-acked messages.
+
+![noprefetch](imgs/noprefetch.png)
+
+Limit un-acked messages per consumer so one worker doesn’t hog the entire queue
+
+Prefetch is applied separately to each new consumer on the channel
+
+- prefetchSize -> Size of the prefetch in bytes
+- prefetchCount -> The prefetch count
+- global -> If set to 'true', use global prefetch
+
+```cs
+await channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 10, global: false);
+```
+
+![consumerprefetch](imgs/consumerprefetch.png)
+
 ## Message acknowledgment
 
 Doing a task can take a few seconds. You may wonder what happens if one of the consumers starts a long task and dies with it only partly done. With our current code, once RabbitMQ delivers a message to the consumer it immediately marks it for deletion. In this case, if you terminate a worker we will lose the message it was just processing. We'll also lose all the messages that were dispatched to this particular worker but were not yet handled.
 
 But we don't want to lose any tasks. If a worker dies, we'd like the task to be delivered to another worker.
 
-- In consumer, set autoAck: false
+- In consumer, set autoAck: false (If autoAck is true, a message is considered done as soon as it's delivered)
 
 ```cs
 await channel.BasicConsumeAsync("q.hello", autoAck: false, consumer: consumer);

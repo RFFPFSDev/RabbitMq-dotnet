@@ -7,6 +7,7 @@ using var connection = await factory.CreateConnectionAsync();
 using var channel = await connection.CreateChannelAsync();
 
 await channel.QueueDeclareAsync(queue: "q.hello", durable: true, exclusive: false, autoDelete: false, arguments: null);
+await channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 10, global: false);
 
 Console.WriteLine(" [*] Waiting for messages.");
 
