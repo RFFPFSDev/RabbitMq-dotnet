@@ -32,7 +32,7 @@ for (int i = 0; i < 100; i++)
     }
     catch (Exception ex)
     {
-        Console.WriteLine($" [] Failed to send {message}. Error {ex.Message}");
+        Console.WriteLine($" [] Failed to send {message}. Reason: {ex.Message}");
         i--;
     }
 }

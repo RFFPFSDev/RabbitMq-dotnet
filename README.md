@@ -123,7 +123,9 @@ await channel.BasicConsumeAsync("hello", autoAck: true, consumer: consumer);
 - autoAck -> to acknowledge the message
 - consumer -> code with channel and event callback
 
-# Multiple Workers/Consumers
+# Work queue
+
+The assumption behind a work queue is that each task is delivered to exactly one worker.
 
 - Same producer but we are sending 100 messages
 - Same consumer but we are delaying 1 second to reproduce a long task
@@ -247,9 +249,16 @@ for (int i = 0; i < 100; i++)
 }
 ```
 
-![publisherconfirms1](publisherconfirms1.png)
+![publisherconfirms1](imgs/publisherconfirms1.png)
 
-![publisherconfirms2](publisherconfirms2.png)
+![publisherconfirms2](imgs/publisherconfirms2.png)
+
+
+# Publish/Subscribe
+
+The assumption behind a Publish/Subscribe is that each task is delivered to multiple consumers.
+
+https://www.rabbitmq.com/tutorials/tutorial-three-dotnet
 
 ## References:
 
