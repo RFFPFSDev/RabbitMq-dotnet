@@ -6,7 +6,7 @@
 
 The core idea in the messaging model in RabbitMQ is that the producer never sends any messages directly to a queue.
 
-Instead, the producer can only send messages to an exchange and the exchange then pushes them to queues. The exchange must know exactly what to do with a message it receives. Should it be appended to a particular queue? Should it be appended to many queues? Or should it get discarded. The rules for that are defined by the exchange type.
+Instead, the producer can only send messages to an exchange and the exchange then pushes them to queues. The exchange must know exactly what to do with a message it receives. Should it be appended to a particular queue? Should it be appended to many queues? Or should it get discarded? The rules for that are defined by the exchange type.
 
 ![overviewqueue](imgs/overviewqueue.png)
 
@@ -265,6 +265,10 @@ for (int i = 0; i < 100; i++)
 # Publish/Subscribe
 
 The assumption behind a Publish/Subscribe is that each task is delivered to multiple consumers.
+
+## Exchange type: Fan-out
+
+Fanout just broadcasts all the messages it receives to all the queues it knows
 
 https://www.rabbitmq.com/tutorials/tutorial-three-dotnet
 
