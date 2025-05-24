@@ -207,15 +207,59 @@ await channel.BasicPublishAsync(exchange: string.Empty, routingKey: "q.hello", t
 
 Note on Message Persistence: Marking messages as persistent doesn't fully guarantee that a message won't be lost. Although it tells RabbitMQ to save the message to disk, there is still a short time window when RabbitMQ has accepted a message and hasn't saved it yet. Also, RabbitMQ doesn't do fsync(2) for every message -- it may be just saved to cache and not really written to the disk. The persistence guarantees aren't strong, but it's more than enough for our simple task queue. If you need a stronger guarantee then you can use publisher confirms.
 
-## TO DO: Publisher confirms
+## Enabling Publisher Confirms on a Channel
 
-https://www.rabbitmq.com/docs/confirms
+- add channelOpts enabling publisher confirmation.
+
+```cs
+var channelOpts = new CreateChannelOptions(
+    publisherConfirmationsEnabled: true,
+    publisherConfirmationTrackingEnabled: true,
+    outstandingPublisherConfirmationsRateLimiter: new ThrottlingRateLimiter(50)
+);
+
+using var channel = await connection.CreateChannelAsync(channelOpts);
+```
+
+- add delay to test stopping rabbitmq docker container
+- Put code inside try catch block
+- i-- to retry current message not sent.
+
+Note: The await returns as soon as the message has been confirmed. If the message is is nack-ed or returned (meaning the broker could not take care of it for some reason), the method will throw an exception. 
+
+```cs
+for (int i = 0; i < 100; i++)
+{
+    await Task.Delay(100);
+    var message = $"MESSAGE: {i + 1}";
+    var body = Encoding.UTF8.GetBytes(message);
+
+    try
+    {
+        await channel.BasicPublishAsync(exchange: string.Empty, routingKey: "q.hello", true, basicProperties: properties, body: body);
+        Console.WriteLine($" [x] Sent {message}");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($" [] Failed to send {message}. Error {ex.Message}");
+        i--;
+    }
+}
+```
+
+![publisherconfirms1](publisherconfirms1.png)
+
+![publisherconfirms2](publisherconfirms2.png)
 
 ## References:
 
 https://www.rabbitmq.com/tutorials/tutorial-one-dotnet
 
 https://www.rabbitmq.com/tutorials/tutorial-two-dotnet
+
+https://www.rabbitmq.com/docs/confirms
+
+https://www.rabbitmq.com/tutorials/tutorial-seven-dotnet
 
 https://medium.com/@deshan.m/6-fantastic-mistakes-that-you-can-do-using-rabbitmq-nodejs-cbf5db99613c
 
