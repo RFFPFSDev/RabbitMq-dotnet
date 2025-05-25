@@ -323,14 +323,13 @@ Notes:
 
 ![noqueues](imgs/noqueues.png)
 
-
-https://www.rabbitmq.com/tutorials/tutorial-three-dotnet
-
 ## References:
 
 https://www.rabbitmq.com/tutorials/tutorial-one-dotnet
 
 https://www.rabbitmq.com/tutorials/tutorial-two-dotnet
+
+https://www.rabbitmq.com/tutorials/tutorial-three-dotnet
 
 https://www.rabbitmq.com/docs/confirms
 
