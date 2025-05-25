@@ -113,7 +113,6 @@ await channel.QueueDeclareAsync(queue: "q.hello", durable: false, exclusive: fal
 
 Code to consume message
 
-
 ```cs
 var consumer = new AsyncEventingBasicConsumer(channel);
 consumer.ReceivedAsync += (model, ea) =>
@@ -134,6 +133,8 @@ await channel.BasicConsumeAsync("hello", autoAck: true, consumer: consumer);
 # Work queue
 
 The assumption behind a Work Queue is that each task is delivered to exactly one worker.
+
+![workqueue](imgs/workqueue.png)
 
 - Same producer but we are sending 100 messages
 - Same consumer but we are delaying 1 second to reproduce a long task
@@ -261,14 +262,63 @@ for (int i = 0; i < 100; i++)
 
 ![publisherconfirms2](imgs/publisherconfirms2.png)
 
-
 # Publish/Subscribe
 
 The assumption behind a Publish/Subscribe is that each task is delivered to multiple consumers.
 
-## Exchange type: Fan-out
+![pubsub](imgs/pubsub.png)
+
+## Publish
 
 Fanout just broadcasts all the messages it receives to all the queues it knows
+
+- Create a exchange of type fanout
+
+```cs
+await channel.ExchangeDeclareAsync(exchange: "emailmessages", type: ExchangeType.Fanout);
+```
+
+- Publish to that exchange
+
+```cs
+await channel.BasicPublishAsync(exchange: "emailmessages", routingKey: string.Empty, body: body);
+```
+
+## Subscribe
+
+For both subscribers (log/send e-mail):
+
+- Bind exchange to a new temporary queue
+
+```cs
+await channel.QueueBindAsync(queue: queueDeclareResult.QueueName, exchange: "emailmessages", routingKey: string.Empty);
+```
+
+- Consume message from that temporary queue
+
+```cs
+await channel.BasicConsumeAsync(queueDeclareResult.QueueName, autoAck: true, consumer: consumer);
+```
+
+![testpubsub](testpubsub.png)
+
+## Temporary queues
+
+We want to hear about all log messages, not just a subset of them. We're also interested only in currently flowing messages not in the old ones. 
+
+To solve that we need two things:
+
+- Whenever we connect to Rabbit we need a fresh, empty queue. To do this we could create a queue with a random name, or, even better - let the server choose a random queue name for us.
+- Once we disconnect the consumer, the queue should be automatically deleted.
+
+Notes:
+- In the .NET client, when we supply no parameters to QueueDeclareAsync() we create a non-durable, exclusive, autodelete queue with a generated name:
+- Also, the messages will be lost if no queue is bound to the exchange yet, but that's okay for us; if no consumer is listening yet we can safely discard the message.
+
+![exchangeemailmessages](imgs/exchangeemailmessages.png)
+
+![noqueues](noqueues.png)
+
 
 https://www.rabbitmq.com/tutorials/tutorial-three-dotnet
 
