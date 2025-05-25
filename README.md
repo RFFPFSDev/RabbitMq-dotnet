@@ -300,7 +300,11 @@ await channel.QueueBindAsync(queue: queueDeclareResult.QueueName, exchange: "ema
 await channel.BasicConsumeAsync(queueDeclareResult.QueueName, autoAck: true, consumer: consumer);
 ```
 
-![testpubsub](testpubsub.png)
+![testpubsub](imgs/testpubsub.png)
+
+## Pre-note:
+
+This tutorial follows rabbitmq documentation example. But, in real world, we probably don't wanna temporary queues to avoid losing messages.
 
 ## Temporary queues
 
