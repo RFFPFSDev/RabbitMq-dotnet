@@ -321,7 +321,7 @@ Notes:
 
 ![exchangeemailmessages](imgs/exchangeemailmessages.png)
 
-![noqueues](noqueues.png)
+![noqueues](imgs/noqueues.png)
 
 
 https://www.rabbitmq.com/tutorials/tutorial-three-dotnet
