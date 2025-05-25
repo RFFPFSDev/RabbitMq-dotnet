@@ -323,17 +323,17 @@ Notes:
 
 ![noqueues](imgs/noqueues.png)
 
-## References:
+# TO DO: Routing
 
-https://www.rabbitmq.com/tutorials/tutorial-one-dotnet
+https://www.rabbitmq.com/tutorials/tutorial-four-dotnet
 
-https://www.rabbitmq.com/tutorials/tutorial-two-dotnet
+# TO DO: Topics
 
-https://www.rabbitmq.com/tutorials/tutorial-three-dotnet
+https://www.rabbitmq.com/tutorials/tutorial-five-dotnet
 
-https://www.rabbitmq.com/docs/confirms
+# Dead Messages
 
-https://www.rabbitmq.com/tutorials/tutorial-seven-dotnet
+# Best Practices
 
 https://medium.com/@deshan.m/6-fantastic-mistakes-that-you-can-do-using-rabbitmq-nodejs-cbf5db99613c
 
@@ -346,3 +346,26 @@ https://www.cloudamqp.com/blog/part4-rabbitmq-13-common-errors.html
 https://www.cloudamqp.com/blog/part3-rabbitmq-best-practice-for-high-availability.html
 
 https://www.cloudamqp.com/blog/part2-rabbitmq-best-practice-for-high-performance.html
+
+# TO DO: Local c# rabbitmq library to abstract logic
+
+# TO DO: Real world example
+
+Book
+
+![realworldexample](imgs/realworldexample.png)
+
+## References:
+
+https://www.rabbitmq.com/tutorials/tutorial-one-dotnet
+
+https://www.rabbitmq.com/tutorials/tutorial-two-dotnet
+
+https://www.rabbitmq.com/tutorials/tutorial-three-dotnet
+
+https://www.rabbitmq.com/docs/confirms
+
+https://www.rabbitmq.com/tutorials/tutorial-seven-dotnet
+
+
+[Book] RabbitMQ Essentials: Build distributed and scalable applications with message queuing using RabbitMQ 
