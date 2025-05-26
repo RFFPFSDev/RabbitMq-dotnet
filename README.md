@@ -347,8 +347,6 @@ https://www.cloudamqp.com/blog/part3-rabbitmq-best-practice-for-high-availabilit
 
 https://www.cloudamqp.com/blog/part2-rabbitmq-best-practice-for-high-performance.html
 
-# TO DO: Local c# rabbitmq library to abstract logic
-
 # TO DO: Real world example
 
 Book
