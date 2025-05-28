@@ -8,7 +8,7 @@ using var channel = await connection.CreateChannelAsync();
 
 await channel.ExchangeDeclareAsync(exchange: "emailmessages", type: ExchangeType.Fanout);
 
-var queueDeclareResult = await channel.QueueDeclareAsync();
+var queueDeclareResult = await channel.QueueDeclareAsync(queue: "q.logs", durable: true, exclusive: false, autoDelete: false, arguments: null);
 
 await channel.QueueBindAsync(queue: queueDeclareResult.QueueName, exchange: "emailmessages", routingKey: string.Empty);
 

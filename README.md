@@ -302,10 +302,6 @@ await channel.BasicConsumeAsync(queueDeclareResult.QueueName, autoAck: true, con
 
 ![testpubsub](imgs/testpubsub.png)
 
-## Pre-note:
-
-This tutorial follows rabbitmq documentation example. But, in real world, we probably don't wanna temporary queues to avoid losing messages.
-
 ## Temporary queues
 
 We want to hear about all log messages, not just a subset of them. We're also interested only in currently flowing messages not in the old ones. 
@@ -322,6 +318,22 @@ Notes:
 ![exchangeemailmessages](imgs/exchangeemailmessages.png)
 
 ![noqueues](imgs/noqueues.png)
+
+## Remove Temporary queue:
+
+This tutorial follows rabbitmq documentation example. But, in real world, we don't wanna temporary queues to avoid losing messages.
+
+Example: If subscriber(consumer) stop working even for few seconds or the RabbitMQ (broker) restart, the message/queue will be deleted.
+
+- Instead declare a queue in each subscriber application
+
+```cs
+var queueDeclareResult = await channel.QueueDeclareAsync(queue: "q.logs", durable: true, exclusive: false, autoDelete: false, arguments: null);
+```
+
+```cs
+var queueDeclareResult = await channel.QueueDeclareAsync(queue: "q.sendemails", durable: true, exclusive: false, autoDelete: false, arguments: null);
+```
 
 # TO DO: Routing
 
