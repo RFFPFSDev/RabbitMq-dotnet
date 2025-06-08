@@ -356,16 +356,38 @@ These bindings can be summarised as:
 - Q1 is interested in all the orange animals.
 - Q2 wants to hear everything about rabbits, and everything about lazy animals.
 
-* (star) can substitute for exactly one word.
-# (hash) can substitute for zero or more words.
+Notes:
 
-# Dead Messages
+- "*" (star) can substitute for exactly one word.
+- "#" (hash) can substitute for zero or more words.
+
+# Handling Failure Successfully
+
+## Ack
+
+By setting the auto-ack parameter on the consumer to false, we ensure that messages are removed from the queue only when a consumer has accepted the message and acknowledged that it was successfully processed
+
+If a consumer takes a message and does not acknowledge that it has been successfully processed within a given time window, then another consumer is given the message. This can lead to messages being processed more than once so it's important to make sure that your system can tolerate this outcome, and that the timeout settings are set appropriately for the length of time the worker is expected to need to process the message. On the plus side, this does give us "at-least-once" delivery guarantee as we can be sure that the message will get processed.
+
+## Dead letter 
+
+Problems arise when “at-least-once” doesn’t have room for the fact that some messages will never be successfully processed. Perhaps they are invalid or intentionally harmful, or simply contain data that the worker doesn’t know how to handle. By always leaving them on the queue, the queue could become clogged up with these messages that can’t be processed but aren’t getting drained away. We can configure our queues to direct any rejected messages to a “dead letter” exchange; this allows us to inspect and potentially process later any messages which our existing workers didn’t handle.
+
+We can simply give up on them without any further processing. To do so, we send a `reject` response rather than our usual `ack` with the requeue option set to false so that the message will never be processed
+
+## Queue Is Too Full
+
+## TTL (“time to live”)
+
+## delayed retry / exponential backoff strategy
+
+## Idempotency
+
+Reprocessing messages requires idempotent tasks at the application side too
 
 # Best Practices
 
 https://medium.com/@deshan.m/6-fantastic-mistakes-that-you-can-do-using-rabbitmq-nodejs-cbf5db99613c
-
-https://medium.com/codait/handling-failure-successfully-in-rabbitmq-22ffa982b60f
 
 https://www.cloudamqp.com/blog/part1-rabbitmq-best-practice.html
 
@@ -396,5 +418,7 @@ https://www.rabbitmq.com/tutorials/tutorial-five-dotnet
 https://www.rabbitmq.com/tutorials/tutorial-seven-dotnet
 
 https://www.rabbitmq.com/docs/confirms
+
+https://medium.com/codait/handling-failure-successfully-in-rabbitmq-22ffa982b60f
 
 [Book] RabbitMQ Essentials: Build distributed and scalable applications with message queuing using RabbitMQ 
