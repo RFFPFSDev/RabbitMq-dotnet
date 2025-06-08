@@ -325,7 +325,7 @@ This tutorial follows rabbitmq documentation example. But, in real world, we don
 
 Example: If subscriber(consumer) stop working even for few seconds or the RabbitMQ (broker) restart, the message/queue will be deleted.
 
-- Instead declare a queue in each subscriber application
+- Instead, declare a queue in each subscriber application
 
 ```cs
 var queueDeclareResult = await channel.QueueDeclareAsync(queue: "q.logs", durable: true, exclusive: false, autoDelete: false, arguments: null);
@@ -335,13 +335,29 @@ var queueDeclareResult = await channel.QueueDeclareAsync(queue: "q.logs", durabl
 var queueDeclareResult = await channel.QueueDeclareAsync(queue: "q.sendemails", durable: true, exclusive: false, autoDelete: false, arguments: null);
 ```
 
-# TO DO: Routing
+# Routing with Direct exchange
 
-https://www.rabbitmq.com/tutorials/tutorial-four-dotnet
+Using a direct exchange, a message goes to the queues whose binding key exactly matches the routing key of the message.
 
-# TO DO: Topics
+![routingsetup](imgs/routingsetup.png)
 
-https://www.rabbitmq.com/tutorials/tutorial-five-dotnet
+In this example, a message published to the exchange with a routing key orange will be routed to queue Q1. Messages with a routing key of black or green will go to Q2. All other messages will be discarded.
+
+# Topics with Topic exchange
+
+Direct exchange has limitations. It can't do routing based on multiple criteria.
+
+![topicsetup](imgs/topicsetup.png)
+
+In this example, we're going to send messages which all describe animals. The messages will be sent with a routing key that consists of three words (two dots). The first word in the routing key will describe speed, second a colour and third a species: <speed>.<colour>.<species>
+
+These bindings can be summarised as:
+
+- Q1 is interested in all the orange animals.
+- Q2 wants to hear everything about rabbits, and everything about lazy animals.
+
+* (star) can substitute for exactly one word.
+# (hash) can substitute for zero or more words.
 
 # Dead Messages
 
@@ -373,9 +389,12 @@ https://www.rabbitmq.com/tutorials/tutorial-two-dotnet
 
 https://www.rabbitmq.com/tutorials/tutorial-three-dotnet
 
-https://www.rabbitmq.com/docs/confirms
+https://www.rabbitmq.com/tutorials/tutorial-four-dotnet
+
+https://www.rabbitmq.com/tutorials/tutorial-five-dotnet
 
 https://www.rabbitmq.com/tutorials/tutorial-seven-dotnet
 
+https://www.rabbitmq.com/docs/confirms
 
 [Book] RabbitMQ Essentials: Build distributed and scalable applications with message queuing using RabbitMQ 
