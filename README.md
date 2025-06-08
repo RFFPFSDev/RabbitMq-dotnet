@@ -399,13 +399,6 @@ https://www.cloudamqp.com/blog/part3-rabbitmq-best-practice-for-high-availabilit
 
 https://www.cloudamqp.com/blog/part4-rabbitmq-13-common-errors.html
 
-
-# TO DO: Real world example
-
-Book
-
-![realworldexample](imgs/realworldexample.png)
-
 ## References:
 
 https://www.rabbitmq.com/tutorials/tutorial-one-dotnet
@@ -423,5 +416,3 @@ https://www.rabbitmq.com/tutorials/tutorial-seven-dotnet
 https://www.rabbitmq.com/docs/confirms
 
 https://medium.com/codait/handling-failure-successfully-in-rabbitmq-22ffa982b60f
-
-[Book] RabbitMQ Essentials: Build distributed and scalable applications with message queuing using RabbitMQ 
