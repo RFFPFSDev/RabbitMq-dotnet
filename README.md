@@ -375,9 +375,13 @@ Problems arise when “at-least-once” doesn’t have room for the fact that so
 
 We can simply give up on them without any further processing. To do so, we send a `reject` response rather than our usual `ack` with the requeue option set to false so that the message will never be processed
 
+A queue that is declared with the x-dead-letter-exchange property will send messages which are either rejected, nacked or expired (with TTL) to the specified dead-letter-exchange. If you specify x-dead-letter-routing-key the routing key of the message with be changed when dead lettered.
+
 ## Queue Is Too Full
 
 ## TTL (“time to live”)
+
+By declaring a queue with the x-message-ttl property, messages will be discarded from the queue if they haven't been consumed within the time specified.
 
 ## delayed retry / exponential backoff strategy
 
@@ -387,15 +391,14 @@ Reprocessing messages requires idempotent tasks at the application side too
 
 # Best Practices
 
-https://medium.com/@deshan.m/6-fantastic-mistakes-that-you-can-do-using-rabbitmq-nodejs-cbf5db99613c
-
 https://www.cloudamqp.com/blog/part1-rabbitmq-best-practice.html
 
-https://www.cloudamqp.com/blog/part4-rabbitmq-13-common-errors.html
+https://www.cloudamqp.com/blog/part2-rabbitmq-best-practice-for-high-performance.html
 
 https://www.cloudamqp.com/blog/part3-rabbitmq-best-practice-for-high-availability.html
 
-https://www.cloudamqp.com/blog/part2-rabbitmq-best-practice-for-high-performance.html
+https://www.cloudamqp.com/blog/part4-rabbitmq-13-common-errors.html
+
 
 # TO DO: Real world example
 
